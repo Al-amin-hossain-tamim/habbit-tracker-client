@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { use } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
@@ -16,14 +16,10 @@ import { toast, ToastContainer } from "react-toastify";
 //    <AddHabbit apiEndpoint="http://localhost:5000/api/habits" user={authUser} authToken={token} onSuccess={(res)=>console.log(res)} />
 
 const AddHabbit = () => {
- const {loginUser}=use(AuthContext)
+  const { loginUser } = use(AuthContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-
-   
-
     const name = e.target.name.value;
     const email = e.target.email.value;
     const title = e.target.title.value;
@@ -31,6 +27,7 @@ const AddHabbit = () => {
     const category = e.target.category.value;
     const frequency = e.target.frequency.value;
     const imageUrl = e.target.imageUrl.value;
+    const created_At = e.target.startDate.value;
     const newHabit = {
       name,
       email,
@@ -38,12 +35,13 @@ const AddHabbit = () => {
       description,
       category,
       frequency,
-
+      created_At,
       imageUrl,
     };
     await axios.post("http://localhost:5000/habbits", newHabit);
-    e.target.reset()
-    toast.success("baler mathar kaj hoi gece")
+
+    e.target.reset();
+    toast.success("habbit added successfully");
   };
 
   return (
@@ -81,11 +79,10 @@ const AddHabbit = () => {
           {/* title */}
           <div>
             <label className="block text-sm font-medium mb-2">
-              Habit Title
+             <span className="text-red-600">*</span> Habit Title
             </label>
             <input
               name="title"
-         
               className="input input-bordered w-full"
               placeholder="e.g., Morning Walk"
               required
@@ -95,11 +92,10 @@ const AddHabbit = () => {
           {/* description */}
           <div>
             <label className="block text-sm font-medium mb-2">
-              Description
+             <span className="text-red-600">*</span> Description
             </label>
             <textarea
               name="description"
-            
               rows="3"
               className="textarea textarea-bordered w-full"
               placeholder="Short description of the habit"
@@ -110,10 +106,9 @@ const AddHabbit = () => {
           {/* meta */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Category</label>
+              <label className="block text-sm font-medium mb-2"><span className="text-red-500">*</span> Category</label>
               <select
                 name="category"
-               
                 className="select select-bordered w-full"
                 required
               >
@@ -128,11 +123,11 @@ const AddHabbit = () => {
 
             <div>
               <label className="block text-sm font-medium mb-2">
-                Frequency
+              <span className="text-red-600">*</span>  Frequency
               </label>
               <select
                 name="frequency"
-                
+                required
                 className="select select-bordered w-full"
               >
                 <option value="Daily">Daily</option>
@@ -142,13 +137,13 @@ const AddHabbit = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
-                Start Date
+              <label className="block text-sm font-medium mb-2 items-center">
+               <span className="text-red-600">*</span> Start Date
               </label>
               <input
                 name="startDate"
                 type="date"
-              
+                required
                 className="input input-bordered w-full"
               />
             </div>
@@ -162,7 +157,7 @@ const AddHabbit = () => {
             <input
               name="imageUrl"
               className="input input-bordered w-full"
-              placeholder="image@example.com"
+              placeholder="imageUrl"
               required
             />
           </div>
@@ -181,4 +176,4 @@ const AddHabbit = () => {
     </div>
   );
 };
-export default AddHabbit
+export default AddHabbit;
