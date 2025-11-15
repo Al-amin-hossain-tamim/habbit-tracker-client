@@ -11,6 +11,7 @@ import ErrorPage from "../components/ErrorPage/ErrorPage";
 import AddHabbit from "../components/AddHabbits/AddHabbit";
 import MyHabbit from "../components/MyHabbit/MyHabbit";
 import PublicHabbits from "../components/PublicHabbits/PublicHabbits";
+import HabbitDetails from "../components/HabbitDetails/HabbitDetails";
 
 const router = createBrowserRouter([
   {
@@ -48,12 +49,17 @@ const router = createBrowserRouter([
             <MyHabbit></MyHabbit>
           </PrivateRoute>
         ),
-        loader: ()=>fetch("http://localhost:5000/habbits")
+        
       },
       {
         path: "PublicHabbits",
         Component: PublicHabbits,
       },
+      {
+        path:'HabbitDetails/:id',
+        loader:({params})=>fetch(`http://localhost:5000/habbits/${params.id}`),
+        element:<HabbitDetails></HabbitDetails>
+      }
     ],
   },
 ]);

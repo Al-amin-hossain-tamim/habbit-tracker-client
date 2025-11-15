@@ -1,5 +1,5 @@
 import React, { use } from "react";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import "./Navbar.css";
 import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
 import profile from "../../assets/profile.png";
@@ -7,11 +7,14 @@ import logo from "../../assets/habbit_logo.jpeg"
 
 const Navbar = () => {
   const { loginUser, signOutUser, loading, setLoading } = use(AuthContext);
+  const navigate = useNavigate();
 
   const handleSignOut = () => {
     setTimeout(() => {
       signOutUser()
-        .then(() => {})
+        .then(() => {
+          navigate('/Login')
+        })
         .catch(() => {})
         .finally(() => {
           setLoading(false);
