@@ -44,22 +44,43 @@ const Login = () => {
   }
   const handleGoogleLogin = ()=>{
       signInWithGoogle()
-      .then(()=>{
+      .then((result)=>{
         navigate(location?.state|| '/')
+
+         console.log(result.user);
+        const newUser = {
+          name: result.user.displayName,
+          email: result.user.email,
+          image: result.user.photoURL,
+        };
+
+        // create user in the database
+
+        fetch("http://localhost:5000/users", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(newUser),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("data after user save", data);
+          });
       })
       .catch(()=>{
         
       })
   }
  
-  const handleForgetPassword = ()=>{
-    const email = emailRef.current.value;
-    if (email) {
-      navigate(`/forget-password/${encodeURIComponent(email)}`);
-    } else {
-      navigate(`/forget-password`);
-    }
-  }
+  // const handleForgetPassword = ()=>{
+  //   const email = emailRef.current.value;
+  //   if (email) {
+  //     navigate(`/forget-password/${encodeURIComponent(email)}`);
+  //   } else {
+  //     navigate(`/forget-password`);
+  //   }
+  // }
 
   const handlePasswordBtn = (e)=>{
       e.preventDefault()
@@ -72,7 +93,7 @@ const Login = () => {
       <title></title>
       {
         (
-          loading && <div className='flex w-full min-h-screen justify-center inset-0  z-50 bg-black bg-opacity-30 items-center'>
+          loading && <div className='flex w-full min-h-screen justify-center inset-0  z-100 bg-black bg-opacity-30 items-center'>
             <p className='text-2xl font-bold  text-white'><span className="loading loading-bars loading-xl "></span> <span>Loading please wait!!</span></p>
         </div>
         )
@@ -105,7 +126,7 @@ const Login = () => {
                 
                 <div >
                   
-                  <button onClick={handleForgetPassword} className="link link-hover">Forgot password?</button>
+                  <button className="link link-hover">Forgot password?</button>
                   
                 </div>
                 <button className="btn btn-neutral mt-4">Login</button>

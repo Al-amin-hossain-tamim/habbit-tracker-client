@@ -1,12 +1,12 @@
 import React, { use } from "react";
 import { NavLink } from "react-router";
-
 import "./Navbar.css";
 import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
 import profile from "../../assets/profile.png";
+import logo from "../../assets/habbit_logo.jpeg"
 
 const Navbar = () => {
-  const { user, signOutUser, loading, setLoading } = use(AuthContext);
+  const { loginUser, signOutUser, loading, setLoading } = use(AuthContext);
 
   const handleSignOut = () => {
     setTimeout(() => {
@@ -19,7 +19,7 @@ const Navbar = () => {
     }, 2000);
   };
   return (
-    <div className="bg-base-100 shadow-sm">
+    <div className="bg-gray-200 shadow-sm">
       {loading && (
         <div className="flex w-full min-h-screen justify-center inset-0  z-50 bg-black bg-opacity-30 items-center">
           <p className="text-2xl font-bold  text-white">
@@ -52,63 +52,152 @@ const Navbar = () => {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
               <li>
-                <NavLink to="/" className="font-bold ">
+                <NavLink
+                  to="/"
+                  className={({ isActive }) =>
+                    `font-semibold text-base transition-colors duration-200 ${
+                      isActive
+                        ? "text-orange-500 border-b-2 border-orange-500 pb-1"
+                        : "text-slate-700 hover:text-orange-500"
+                    }`
+                  }
+                >
                   Home
                 </NavLink>
               </li>
+
               <li>
-                <NavLink to="/ToyGallery" className="font-bold ">
-                  ToyGallery
+                <NavLink
+                  to="/AddHabbit"
+                  className={({ isActive }) =>
+                    `font-semibold text-base transition-colors duration-200 ${
+                      isActive
+                        ? "text-orange-500 border-b-2 border-orange-500 pb-1"
+                        : "text-slate-700 hover:text-orange-500"
+                    }`
+                  }
+                >
+                  Add Habit
                 </NavLink>
               </li>
+
               <li>
-                <NavLink to="/MyProfile" className="font-bold ">
-                  My Profile
+                <NavLink
+                  to="/MyHabbit"
+                  className={({ isActive }) =>
+                    `font-semibold text-base transition-colors duration-200 ${
+                      isActive
+                        ? "text-orange-500 border-b-2 border-orange-500 pb-1"
+                        : "text-slate-700 hover:text-orange-500"
+                    }`
+                  }
+                >
+                  My Habits
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink
+                  to="/PublicHabbits"
+                  className={({ isActive }) =>
+                    `font-semibold text-base transition-colors duration-200 ${
+                      isActive
+                        ? "text-orange-500 border-b-2 border-orange-500 pb-1"
+                        : "text-slate-700 hover:text-orange-500"
+                    }`
+                  }
+                >
+                  Public Habits
                 </NavLink>
               </li>
             </ul>
           </div>
-          <div className="flex items-center">
-            <img className="w-[50px] rounded-full" src="alamin" alt="" />
-            <a className=" text-xl font-bold ml-2">ToyTopia</a>
+          <div className="flex items-center gap-2">
+            {/* Icon */}
+            
+                  <img className="w-[12%] rounded-full" src={logo} alt="" />
+
+            {/* Text */}
+            <h1 className="text-xl font-bold tracking-tight">
+              <span className="text-slate-900">Habit</span>
+              <span className="text-orange-500">Spark</span>
+            </h1>
           </div>
         </div>
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1 font-bold text-xl">
+          <ul className="flex gap-6 items-center">
             <li>
-              <NavLink to="/" className="font-bold ">
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  `font-semibold text-base transition-colors duration-200 ${
+                    isActive
+                      ? "text-orange-500 border-b-2 border-orange-500 pb-1"
+                      : "text-slate-700 hover:text-orange-500"
+                  }`
+                }
+              >
                 Home
               </NavLink>
             </li>
+
             <li>
-              <NavLink to="/AddHabbit" className="font-bold ">
+              <NavLink
+                to="/AddHabbit"
+                className={({ isActive }) =>
+                  `font-semibold text-base transition-colors duration-200 ${
+                    isActive
+                      ? "text-orange-500 border-b-2 border-orange-500 pb-1"
+                      : "text-slate-700 hover:text-orange-500"
+                  }`
+                }
+              >
                 Add Habit
               </NavLink>
             </li>
 
             <li>
-              <NavLink to="/MyHabbit" className="font-bold ">
-                MyHabbits
+              <NavLink
+                to="/MyHabbit"
+                className={({ isActive }) =>
+                  `font-semibold text-base transition-colors duration-200 ${
+                    isActive
+                      ? "text-orange-500 border-b-2 border-orange-500 pb-1"
+                      : "text-slate-700 hover:text-orange-500"
+                  }`
+                }
+              >
+                My Habits
               </NavLink>
             </li>
+
             <li>
-            <NavLink to= '/PublicHabbits'>
-              Public Habbits
-            </NavLink>
+              <NavLink
+                to="/PublicHabbits"
+                className={({ isActive }) =>
+                  `font-semibold text-base transition-colors duration-200 ${
+                    isActive
+                      ? "text-orange-500 border-b-2 border-orange-500 pb-1"
+                      : "text-slate-700 hover:text-orange-500"
+                  }`
+                }
+              >
+                Public Habits
+              </NavLink>
             </li>
           </ul>
         </div>
         <div className="navbar-end font-bold text-xl">
-          {user ? (
+          {loginUser ? (
             <div className="flex gap-2 items-center ">
               <div
                 className="tooltip tooltip-bottom"
-                data-tip={user.displayName}
+                data-tip={loginUser.displayName}
               >
-                {user.photoURL ? (
+                {loginUser.photoURL ? (
                   <img
                     className="w-12 rounded-full"
-                    src={user?.photoURL}
+                    src={loginUser?.photoURL}
                     alt=""
                   />
                 ) : (
@@ -118,7 +207,7 @@ const Navbar = () => {
 
               <button
                 onClick={handleSignOut}
-                className="font-bold hover:text-red-500"
+                 className="btn btn-outline btn-sm border-purple-500 text-purple-600 font-semibold hover:bg-purple-100 transition text-sm"
               >
                 Log Out
               </button>
@@ -126,14 +215,28 @@ const Navbar = () => {
           ) : (
             <div>
               <NavLink
-              to="/Login"
-              className=" font-bold text-xl hover:text-blue-400"
-            >
-              Login
-            </NavLink> /
-            <NavLink to='/Resister' className="font-bold text-xl">Signup</NavLink>
+                to="/Login"
+                 className={({ isActive }) =>
+                  `font-semibold text-base transition-colors duration-200 ${
+                    isActive
+                      ? "text-orange-500 border-b-2 border-orange-500 pb-1"
+                      : "text-slate-700 hover:text-blue-500"
+                  }`
+                }
+              >
+                Login
+              </NavLink>{" "}
+              /
+              <NavLink to="/Resister"  className={({ isActive }) =>
+                  `font-semibold text-base transition-colors duration-200 ${
+                    isActive
+                      ? "text-orange-500 border-b-2 border-orange-500 pb-1"
+                      : "text-slate-700 hover:text-red-500"
+                  }`
+                }>
+                Signup
+              </NavLink>
             </div>
-            
           )}
         </div>
       </div>
