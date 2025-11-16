@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
 import { useNavigate } from "react-router";
 
@@ -10,46 +11,71 @@ const MyHabbits = () => {
   const [habits, setHabits] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch user's own habits
- useEffect(() => {
-  // don't run until loginUser.email exists
-  if (!loginUser?.email) return;
+  // ✅ Fetch user's own habits
+  useEffect(() => {
+    if (!loginUser?.email) return;
 
-  const fetchHabits = async () => {
-    setLoading(true);
-    try {
-      const email = loginUser.email.trim().toLowerCase();
-      console.log("Fetching my habbits for email:", email);
+    const fetchHabits = async () => {
+      setLoading(true);
+      try {
+        const email = loginUser.email.trim().toLowerCase();
+        console.log("Fetching my habbits for email:", email);
 
-      const res = await axios.get("http://localhost:5000/my-habbits", {
-        params: { email },
-      });
+        const res = await axios.get("http://localhost:5000/my-habbits", {
+          params: { email },
+        });
 
-      setHabits(res.data);
-    } catch (err) {
-      console.error("Failed to load habits:", err);
-      toast.error("Failed to load habits");
-    } finally {
-      setLoading(false);
-    }
-  };
+        setHabits(res.data);
+      } catch (err) {
+        console.error("Failed to load habits:", err);
+        toast.error("Failed to load habits");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  fetchHabits();
-}, [loginUser?.email]);
+    fetchHabits();
+  }, [loginUser?.email]);
 
-
-  //  Delete habit
+  // ✅ Delete habit (with SweetAlert2)
   const handleDelete = async (id) => {
-    const confirm = window.confirm("Are you sure you want to delete this habit?");
-    if (!confirm) return;
-    try {
-      await axios.delete(`http://localhost:5000/habbits/${id}`);
-      toast.success("Habit deleted successfully");
-      setHabits(habits.filter((h) => h._id !== id));
-    } catch (err) {
-      console.error(err);
-      toast.error("Delete failed");
-    }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This habit will be permanently deleted!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#9333ea", // Tailwind purple-600
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+      background: "#fff",
+      backdrop: `
+        rgba(0,0,0,0.4)
+      `,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`http://localhost:5000/habbits/${id}`);
+          toast.success("Habit deleted successfully");
+          setHabits((prev) => prev.filter((h) => h._id !== id));
+
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your habit has been removed.",
+            icon: "success",
+            confirmButtonColor: "#9333ea",
+          });
+        } catch (err) {
+          console.error("Delete failed:", err);
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to delete the habit. Please try again.",
+            icon: "error",
+            confirmButtonColor: "#d33",
+          });
+        }
+      }
+    });
   };
 
   // ✅ Mark Complete

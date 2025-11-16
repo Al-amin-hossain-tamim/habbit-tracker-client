@@ -37,76 +37,79 @@ const PublicHabit = ({ habit }) => {
     navigate(`/HabbitDetails/${_id}`);
   };
 
-  const handleQuickView = () => {
-    
-    navigate(`/HabbitDetails/${_id}`);
-  };
+
 
   return (
-    <article className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition transform hover:-translate-y-1">
-      {/* Hero image */}
-      <div className="rounded-xl overflow-hidden mb-5">
-        <img
-          src={imageUrl || "https://via.placeholder.com/800x450?text=No+Image"}
-          alt={title}
-          className="w-full h-44 object-cover rounded-xl"
-        />
+    <div
+      className="bg-white rounded-2xl shadow hover:shadow-lg transition-all duration-300 p-5 flex flex-col hover:-translate-y-1"
+    >
+      {/* Image */}
+      <div className="h-40 w-full mb-4 rounded-lg overflow-hidden bg-slate-50 flex items-center justify-center">
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={title}
+            className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
+          />
+        ) : (
+          <div className="text-slate-400">No image</div>
+        )}
       </div>
 
-      {/* Title + description + tags + date */}
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1 pr-4">
-          <h3 className="text-2xl font-extrabold text-slate-900 mb-2 leading-tight">
-            {title}
-          </h3>
+      {/* Info */}
+      <div className="flex-1">
+        <h3 className="text-lg font-semibold text-slate-900 mb-1">{title}</h3>
+        <p className="text-sm text-slate-600 mb-3">{truncate(description, 120)}</p>
 
-          <p className="text-slate-600 mb-4">{truncate(description, 110)}</p>
+        <div className="flex items-center gap-2 text-xs text-slate-500 mb-3">
+          <span className="px-2 py-1 rounded-full bg-purple-50 text-purple-600">
+            {category || "General"}
+          </span>
+          <span className="px-2 py-1 rounded-full bg-slate-100">
+            {frequency || ""}
+          </span>
+          <span className="ml-auto text-slate-400">{formatDate(created_At)}</span>
+        </div>
 
-          <div className="flex items-center gap-3">
-            <span className="px-3 py-1 rounded-full bg-purple-50 text-purple-600 text-xs font-semibold">
-              {category || "General"}
-            </span>
-            <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs">
-              {frequency || "N/A"}
-            </span>
+        <div className="flex items-center gap-3 mt-2">
+          <img
+            src={imageUrl || "/default-avatar.png"}
+            alt={name || "Creator"}
+            className="w-9 h-9 rounded-full object-cover border"
+          />
+          <div>
+            <div className="text-sm font-medium text-slate-800">
+              {name || "Unknown"}
+            </div>
+            <div className="text-xs text-slate-500">{email || ""}</div>
           </div>
-        </div>
-
-        <div className="text-slate-400 text-sm whitespace-nowrap">
-          {formatDate(created_At)}
-        </div>
-      </div>
-
-      {/* Creator */}
-      <div className="flex items-center gap-3 mt-6">
-        <img
-          src={imageUrl || "/default-avatar.png"}
-          alt={name || "Creator"}
-          className="w-12 h-12 rounded-full object-cover border"
-        />
-        <div>
-          <div className="text-sm font-semibold text-slate-800">{name || "Unknown"}</div>
-          <div className="text-xs text-slate-500">{email || ""}</div>
         </div>
       </div>
 
       {/* Actions */}
-      <div className="mt-6 flex items-center gap-4">
+      <div className="mt-4 flex items-center gap-3">
         <button
           onClick={handleViewDetails}
-          className="px-5 py-2 rounded-lg bg-gradient-to-r from-[#9b22ff] to-[#7c3aed] text-white font-semibold shadow hover:opacity-95"
+          className="btn btn-sm bg-purple-600 text-white border-none hover:bg-purple-700"
         >
           View Details
         </button>
 
         <button
-          onClick={handleQuickView}
-          className="text-slate-600 hover:text-purple-600"
+          onClick={() => {
+            if (!loginUser) {
+              toast.error("Login required to view details.");
+              navigate("/Login");
+              return;
+            }
+            navigate(`/HabbitDetails/${_id}`);
+          }}
+          className="btn btn-ghost btn-sm text-slate-600 hover:text-purple-600"
         >
           Quick View
         </button>
       </div>
-    </article>
+    </div>
   );
 };
 
