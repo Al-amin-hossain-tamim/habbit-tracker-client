@@ -7,14 +7,14 @@ import LatestHabbits from "../LatestHabbits/LatestHabbits";
 
 
 
- const latestHabbits = fetch("http://localhost:5000/latest-habbits").then(res=>res.json())
+//  const latestHabbits = fetch("http://localhost:5000/latest-habbits").then(res=>res.json())
 
 const Home = () => {
   return (
     <div className="bg-black/5 pt-10 pb-20">
       <div className="w-11/12 mx-auto">
         <Banner></Banner>
-        <LatestHabbits latestHabbits = {latestHabbits}></LatestHabbits>
+        <LatestHabbits></LatestHabbits>
         <WhyBuildHabbit></WhyBuildHabbit>
         <HowItWorks></HowItWorks>
         <StartYourStreak></StartYourStreak>
