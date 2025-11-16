@@ -38,13 +38,13 @@ const Banner = () => {
                 <div className="mt-6 flex gap-3">
                   <Link
                     to="/AddHabbit"
-                    className="btn bg-orange-500 border-none text-white hover:bg-orange-600"
+                    className="btn bg-indigo-500 border-none text-white hover:bg-indigo-600"
                   >
                     Start a Habit
                   </Link>
                   <Link
                     to="/PublicHabbits"
-                    className="btn btn-outline border-white text-white hover:bg-white hover:text-orange-600"
+                    className="btn btn-outline border-white text-white hover:bg-white hover:text-indigo-600"
                   >
                     Explore Habits
                   </Link>
@@ -75,13 +75,13 @@ const Banner = () => {
                 <div className="mt-6 flex justify-center gap-3">
                   <Link
                     to="/MyHabbit"
-                    className="btn bg-white text-orange-600 border-none hover:bg-orange-100"
+                    className="btn bg-indigo-500 text-white border-none hover:bg-indigo-600"
                   >
                     My Habits
                   </Link>
                   <Link
                     to="/AddHabbit"
-                    className="btn btn-outline border-white text-white hover:bg-white hover:text-orange-600"
+                    className="btn btn-outline border-white text-white hover:bg-white hover:text-indigo-600"
                   >
                     Add Habit
                   </Link>
@@ -112,13 +112,13 @@ const Banner = () => {
                 <div className="mt-6 flex justify-end gap-3">
                   <Link
                     to="/PublicHabbits"
-                    className="btn bg-orange-500 border-none text-white hover:bg-orange-600"
+                    className="btn bg-indigo-500 border-none text-white hover:bg-indigo-600"
                   >
                     View Public Habits
                   </Link>
                   <Link
                     to="/AddHabbit"
-                    className="btn btn-outline border-white text-white hover:bg-white hover:text-orange-600"
+                    className="btn btn-outline border-white text-white hover:bg-white hover:text-indigo-600"
                   >
                     Create Yours
                   </Link>

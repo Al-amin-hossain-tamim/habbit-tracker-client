@@ -154,7 +154,7 @@ const AddHabbit = () => {
           <div className="text-center">
             <button
               type="submit"
-              className="btn bg-orange-500 text-white border-none"
+              className="btn bg-indigo-600 text-white border-none"
             >
               Submit
             </button>

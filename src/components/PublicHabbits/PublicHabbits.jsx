@@ -1,19 +1,32 @@
 import axios from "axios";
-import React, { useEffect,useState} from "react";
+import React, { useEffect, useState } from "react";
 import PublicHabit from "../PublicHabit/PublicHabit";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
+const CATEGORIES = [
+  "All",
+  "Health",
+  "Study",
+  "Productivity",
+  "Personal Growth",
+  "Other",
+];
 
 const PublicHabbits = () => {
   const [habits, setHabits] = useState([]);
+  const [filteredHabits, setFilteredHabits] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("All");
 
   useEffect(() => {
     const fetchHabits = async () => {
+      setLoading(true);
       try {
         const res = await axios.get("http://localhost:5000/habbits");
-        setHabits(res.data);
+        setHabits(Array.isArray(res.data) ? res.data : []);
+        setFilteredHabits(Array.isArray(res.data) ? res.data : []);
       } catch (error) {
         console.error("Error fetching public habits:", error);
         toast.error("Failed to load public habits");
@@ -25,22 +38,78 @@ const PublicHabbits = () => {
     fetchHabits();
   }, []);
 
- 
+  // Filter + search
+  useEffect(() => {
+    let filtered = [...habits];
+
+    // Category filter (fixed list) - case-insensitive exact match
+    if (categoryFilter && categoryFilter !== "All") {
+      const catLower = categoryFilter.toLowerCase();
+      filtered = filtered.filter(
+        (h) => String(h.category || "").trim().toLowerCase() === catLower
+      );
+    }
+
+    // Search by title or description (case-insensitive)
+    if (searchTerm && searchTerm.trim() !== "") {
+      const s = searchTerm.trim().toLowerCase();
+      filtered = filtered.filter(
+        (h) =>
+          String(h.title || "").toLowerCase().includes(s) ||
+          String(h.description || "").toLowerCase().includes(s)
+      );
+    }
+
+    setFilteredHabits(filtered);
+  }, [searchTerm, categoryFilter, habits]);
 
   return (
     <div className="max-w-6xl mx-auto py-12 px-4">
-      <h2 className="text-3xl font-bold text-center text-purple-700 mb-8">
-        Public Habits
+      <h2 className="text-3xl font-bold text-center text-purple-700 mb-10">
+        Browse Public Habits
       </h2>
 
+      {/* Controls */}
+      <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+        <input
+          type="text"
+          placeholder="Search habits by title or keyword..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="input input-bordered w-full md:w-1/2 focus:outline-none focus:border-purple-500"
+        />
+
+        <select
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+          className="select select-bordered w-full md:w-1/4 focus:outline-none focus:border-purple-500"
+        >
+          {CATEGORIES.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Results */}
       {loading ? (
         <p className="text-center text-gray-500">Loading public habits...</p>
-      ) : habits.length === 0 ? (
-        <p className="text-center text-gray-500">No public habits found.</p>
+      ) : filteredHabits.length === 0 ? (
+        <p className="text-center text-gray-500">No habits found.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {habits.map((habit) => <PublicHabit habit={habit} key={habit._id}></PublicHabit>)}
-        </div>
+        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredHabits.map((habit) => (
+            <motion.div
+              key={habit._id}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35 }}
+            >
+              <PublicHabit habit={habit} />
+            </motion.div>
+          ))}
+        </motion.div>
       )}
     </div>
   );

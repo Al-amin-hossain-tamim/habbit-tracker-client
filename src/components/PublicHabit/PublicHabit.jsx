@@ -1,4 +1,3 @@
-
 import React, { useContext } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
@@ -92,7 +91,7 @@ const PublicHabit = ({ habit }) => {
           onClick={handleViewDetails}
           className="btn btn-sm bg-purple-600 text-white border-none hover:bg-purple-700"
         >
-          View Details
+          See Details
         </button>
 
         <button
