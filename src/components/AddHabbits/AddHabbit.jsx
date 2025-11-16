@@ -1,19 +1,8 @@
 import React, { use } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router";
 import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 
-//  AddHabbit page component
-
-//   Props:
-//    - apiEndpoint (string) default: "/api/habits"
-//    - user (object) optional: { name, email }
-//    - authToken (string) optional: Bearer token for Authorization header
-//   - onSuccess (fn) optional: callback(serverResponse)
-
-//   Example:
-//    <AddHabbit apiEndpoint="http://localhost:5000/api/habits" user={authUser} authToken={token} onSuccess={(res)=>console.log(res)} />
 
 const AddHabbit = () => {
   const { loginUser } = use(AuthContext);

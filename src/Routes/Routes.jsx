@@ -12,6 +12,7 @@ import AddHabbit from "../components/AddHabbits/AddHabbit";
 import MyHabbit from "../components/MyHabbit/MyHabbit";
 import PublicHabbits from "../components/PublicHabbits/PublicHabbits";
 import HabbitDetails from "../components/HabbitDetails/HabbitDetails";
+import UpdateHabit from "../components/UpdateHabit/UpdateHabit";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +60,11 @@ const router = createBrowserRouter([
         path:'HabbitDetails/:id',
         loader:({params})=>fetch(`http://localhost:5000/habbits/${params.id}`),
         element:<HabbitDetails></HabbitDetails>
+      },
+      {
+        path:'UpdateHabit/:id',
+        Component:UpdateHabit,
+        loader: ({params})=>fetch(`http://localhost:5000/habbits/${params.id}`)
       }
     ],
   },

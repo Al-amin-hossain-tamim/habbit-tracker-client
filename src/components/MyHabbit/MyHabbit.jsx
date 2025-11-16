@@ -3,7 +3,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const MyHabbits = () => {
   const { loginUser } = useContext(AuthContext);
@@ -153,12 +153,12 @@ const MyHabbits = () => {
                     </td>
                     <td>{formatDate(h.created_At)}</td>
                     <td className="flex flex-wrap gap-2 justify-center mt-2">
-                      <button
-                        onClick={() => navigate(`/update-habbit/${h._id}`)}
+                      <Link
+                        to={`/UpdateHabit/${h._id}`}
                         className="btn btn-xs bg-yellow-400 border-none text-white hover:bg-yellow-500"
                       >
                         Update
-                      </button>
+                      </Link>
 
                       <button
                         onClick={() => handleDelete(h._id)}
