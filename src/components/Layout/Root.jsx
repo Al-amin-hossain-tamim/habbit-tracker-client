@@ -10,7 +10,7 @@ const Root = () => {
                 <Navbar></Navbar>
            
             
-                <div className='flex-1'>
+                <div className='flex-1 bg-black/5'>
                     <Outlet></Outlet>
                 </div>
             

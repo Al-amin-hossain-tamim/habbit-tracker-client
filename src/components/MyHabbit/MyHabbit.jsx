@@ -21,7 +21,7 @@ const MyHabbits = () => {
       const email = loginUser.email.trim().toLowerCase();
       console.log("Fetching my habbits for email:", email);
 
-      const res = await axios.get("http://localhost:5000/habbits", {
+      const res = await axios.get("http://localhost:5000/my-habbits", {
         params: { email },
       });
 
