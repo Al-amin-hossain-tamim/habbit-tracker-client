@@ -117,6 +117,8 @@ const MyHabbits = () => {
       <div className="max-w-6xl mx-auto px-4">
         <h1 className="text-3xl font-bold text-slate-800 mb-8">My Habits</h1>
 
+        <title>HabitSpark/my-habit</title>
+
         {habits.length === 0 ? (
           <div className="text-center text-slate-600 py-10">
             No habits found. Add your first habit now!

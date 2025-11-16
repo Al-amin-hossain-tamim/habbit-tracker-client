@@ -24,6 +24,7 @@ const HabbitDetails = () => {
 
   return (
     <section className="py-12 bg-gradient-to-b from-purple-50 to-white min-h-screen">
+      <title>HabitSpark/habit-details</title>
       <div className="max-w-5xl mx-auto px-4">
         {/* Card Container */}
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">

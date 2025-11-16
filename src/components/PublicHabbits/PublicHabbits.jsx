@@ -38,20 +38,18 @@ const PublicHabbits = () => {
     fetchHabits();
   }, []);
 
-  // Filter + search
+  // Filter + search logic
   useEffect(() => {
     let filtered = [...habits];
 
-    // Category filter (fixed list) - case-insensitive exact match
-    if (categoryFilter && categoryFilter !== "All") {
+    if (categoryFilter !== "All") {
       const catLower = categoryFilter.toLowerCase();
       filtered = filtered.filter(
         (h) => String(h.category || "").trim().toLowerCase() === catLower
       );
     }
 
-    // Search by title or description (case-insensitive)
-    if (searchTerm && searchTerm.trim() !== "") {
+    if (searchTerm.trim() !== "") {
       const s = searchTerm.trim().toLowerCase();
       filtered = filtered.filter(
         (h) =>
@@ -65,7 +63,8 @@ const PublicHabbits = () => {
 
   return (
     <div className="max-w-6xl mx-auto py-12 px-4">
-      <h2 className="text-3xl font-bold text-center text-purple-700 mb-10">
+      <title>HabitSpark/public-habit</title>
+      <h2 className="text-3xl font-bold text-center text-indigo-600 mb-10">
         Browse Public Habits
       </h2>
 
@@ -76,29 +75,32 @@ const PublicHabbits = () => {
           placeholder="Search habits by title or keyword..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="input input-bordered w-full md:w-1/2 focus:outline-none focus:border-purple-500"
+          className="input input-bordered w-full md:w-1/2 focus:outline-none focus:border-indigo-500"
         />
 
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="select select-bordered w-full md:w-1/4 focus:outline-none focus:border-purple-500"
+          className="select select-bordered w-full md:w-1/4 focus:outline-none focus:border-indigo-500"
         >
           {CATEGORIES.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
+            <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
       </div>
 
-      {/* Results */}
+      {/* Loading Spinner */}
       {loading ? (
-        <p className="text-center text-gray-500">Loading public habits...</p>
+        <div className="flex justify-center items-center py-20">
+          <span className="loading loading-spinner loading-lg text-indigo-600"></span>
+        </div>
       ) : filteredHabits.length === 0 ? (
         <p className="text-center text-gray-500">No habits found.</p>
       ) : (
-        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div
+          layout
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
           {filteredHabits.map((habit) => (
             <motion.div
               key={habit._id}

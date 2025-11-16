@@ -35,6 +35,7 @@ const AddHabbit = () => {
 
   return (
     <div className="py-10 px-4">
+      <title>HabitSpark/Add-habit</title>
       <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow">
         <h2 className="text-2xl font-bold mb-4">Add a New Habit</h2>
 

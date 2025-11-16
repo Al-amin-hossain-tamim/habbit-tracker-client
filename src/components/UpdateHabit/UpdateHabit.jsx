@@ -50,6 +50,7 @@ const UpdateHabit = () => {
 
   return (
     <div className="max-w-3xl mx-auto py-12 px-4">
+      <title>HabitSpark/update-habit</title>
       <h2 className="text-2xl font-bold mb-6 text-slate-800 text-center">
         Update Habit
       </h2>
