@@ -18,7 +18,7 @@ const UpdateHabit = () => {
     frequency,
   } = data;
 
-  console.log(data, _id);
+  // console.log(data, _id);
 
   const [submitting, setSubmitting] = useState(false);
 
@@ -50,10 +50,12 @@ const UpdateHabit = () => {
       );
       toast.success("Habit updated successfully!");
       navigate("/MyHabbit");
-    } catch (err) {
+    } 
+    catch (err) {
       console.error("Update failed:", err);
       toast.error("Failed to update habit");
-    } finally {
+    }
+     finally {
       setSubmitting(false);
     }
   };
@@ -180,6 +182,7 @@ const UpdateHabit = () => {
           >
             {submitting ? "Updating..." : "Update Habit"}
           </button>
+          
         </div>
       </form>
     </div>
