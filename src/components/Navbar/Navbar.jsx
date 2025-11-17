@@ -152,7 +152,7 @@ const Navbar = () => {
 
               {/* Dropdown: only displayName, email, Log out */}
               {open && (
-                <div className="absolute right-0 mt-3 w-64 bg-white rounded-lg shadow-lg ">
+                <div className="absolute right-0 mt-3 w-64 bg-white rounded-lg shadow-lg z-10">
                   <div className="px-4 py-3 border-b">
                     <div className="font-semibold text-slate-800 text-sm">
                       {loginUser.displayName || "User"}
