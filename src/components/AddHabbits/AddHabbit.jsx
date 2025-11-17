@@ -3,7 +3,6 @@ import axios from "axios";
 import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 
-
 const AddHabbit = () => {
   const { loginUser } = use(AuthContext);
 
@@ -16,7 +15,8 @@ const AddHabbit = () => {
     const category = e.target.category.value;
     const frequency = e.target.frequency.value;
     const imageUrl = e.target.imageUrl.value;
-    const created_At = e.target.startDate.value;
+    const reminderTime = e.target.reminderTime.value;  
+
     const newHabit = {
       name,
       email,
@@ -24,18 +24,20 @@ const AddHabbit = () => {
       description,
       category,
       frequency,
-      created_At,
       imageUrl,
+      reminderTime, 
     };
+
     await axios.post("http://localhost:5000/habbits", newHabit);
 
     e.target.reset();
-    toast.success("habbit added successfully");
+    toast.success("Habit added successfully");
   };
 
   return (
     <div className="py-10 px-4">
       <title>HabitSpark/Add-habit</title>
+
       <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow">
         <h2 className="text-2xl font-bold mb-4">Add a New Habit</h2>
 
@@ -43,9 +45,7 @@ const AddHabbit = () => {
           {/* name & email */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2">
-                Your name
-              </label>
+              <label className="block text-sm font-medium mb-2">Your name</label>
               <input
                 name="name"
                 defaultValue={`${loginUser.displayName}`}
@@ -69,7 +69,7 @@ const AddHabbit = () => {
           {/* title */}
           <div>
             <label className="block text-sm font-medium mb-2">
-             <span className="text-red-600">*</span> Habit Title
+              <span className="text-red-600">*</span> Habit Title
             </label>
             <input
               name="title"
@@ -82,7 +82,7 @@ const AddHabbit = () => {
           {/* description */}
           <div>
             <label className="block text-sm font-medium mb-2">
-             <span className="text-red-600">*</span> Description
+              <span className="text-red-600">*</span> Description
             </label>
             <textarea
               name="description"
@@ -95,6 +95,7 @@ const AddHabbit = () => {
 
           {/* meta */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
             <div>
               <label className="block text-sm font-medium mb-2"><span className="text-red-500">*</span> Category</label>
               <select
@@ -113,7 +114,7 @@ const AddHabbit = () => {
 
             <div>
               <label className="block text-sm font-medium mb-2">
-              <span className="text-red-600">*</span>  Frequency
+                <span className="text-red-600">*</span> Frequency
               </label>
               <select
                 name="frequency"
@@ -126,28 +127,27 @@ const AddHabbit = () => {
               </select>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2 items-center">
-               <span className="text-red-600">*</span> Start Date
-              </label>
-              <input
-                name="startDate"
-                type="date"
-                required
-                className="input input-bordered w-full"
-              />
-            </div>
+            {/* ⭐ Reminder Time */}
+           <div>
+            <label className="block text-sm font-medium mb-2">
+              <span className="text-red-600">*</span> Reminder Time
+            </label>
+            <input
+              type="time"
+              name="reminderTime"
+              required
+              className="input input-bordered w-full"
+            />
+          </div>
           </div>
 
           {/* image */}
           <div>
-            <label className="block text-sm font-medium mb-2">
-              Habit Image
-            </label>
+            <label className="block text-sm font-medium mb-2">Habit Image (optional)</label>
             <input
               name="imageUrl"
               className="input input-bordered w-full"
-              placeholder="imageUrl"
+              placeholder="Image URL"
               required
             />
           </div>
@@ -162,8 +162,10 @@ const AddHabbit = () => {
           </div>
         </form>
       </div>
-      <ToastContainer></ToastContainer>
+
+      <ToastContainer />
     </div>
   );
 };
+
 export default AddHabbit;

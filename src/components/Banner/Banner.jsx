@@ -8,7 +8,7 @@ import { Link } from "react-router";
 
 const Banner = () => {
   return (
-    <section className="mt-28 md:mt-8">
+    <section className="">
       <Swiper
         modules={[Autoplay, Pagination, Navigation]}
         autoplay={{ delay: 4000, disableOnInteraction: false }}

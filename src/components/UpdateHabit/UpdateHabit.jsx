@@ -8,7 +8,7 @@ const UpdateHabit = () => {
   const navigate = useNavigate();
   const { loginUser } = useContext(AuthContext);
   const data = useLoaderData();
-  const { _id, title, imageUrl, created_At, description, category, frequency } =
+  const { _id, title, imageUrl, reminderTime, description, category, frequency } =
     data;
 
   console.log(data, _id);
@@ -22,7 +22,7 @@ const UpdateHabit = () => {
     const newTitle = e.target.title.value;
     const newDescription = e.target.newDescription.value;
     const newCategory = e.target.newCategory.value;
-    const newTime = e.target.newTime.value;
+    const newReminderTime = e.target.newReminderTime.value;
     const newImageUrl = e.target.newImageUrl.value;
     const newFrequency = e.target.newFrequency.value;
     try {
@@ -30,7 +30,7 @@ const UpdateHabit = () => {
         title: newTitle,
         description: newDescription,
         category: newCategory,
-        created_At: newTime,
+        reminderTime: newReminderTime,
         frequency: newFrequency,
         imageUrl: newImageUrl,
         name: loginUser?.displayName,
@@ -116,14 +116,16 @@ const UpdateHabit = () => {
 
         {/* Reminder Time */}
         <div>
-          <label className="label font-semibold">Reminder Time</label>
-          <input
-            type="date"
-            defaultValue={created_At}
-            className="input input-bordered w-full"
-            name="newTime"
-          />
-        </div>
+            <label className="block text-sm font-medium mb-2">
+            Reminder Time
+            </label>
+            <input
+              type="time"
+              name="newReminderTime"
+              defaultValue={reminderTime}
+              className="input input-bordered w-full"
+            />
+          </div>
 
         {/* Image Upload */}
         <div>
