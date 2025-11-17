@@ -11,7 +11,7 @@ const MyHabbits = () => {
   const [habits, setHabits] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Fetch user's own habits
+  //  Fetch user's own habits
   useEffect(() => {
     if (!loginUser?.email) return;
 
@@ -37,7 +37,7 @@ const MyHabbits = () => {
     fetchHabits();
   }, [loginUser?.email]);
 
-  // ✅ Delete habit (with SweetAlert2)
+  //  Delete habit (with SweetAlert2)
   const handleDelete = async (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -78,7 +78,7 @@ const MyHabbits = () => {
     });
   };
 
-  // ✅ Mark Complete
+  //  Mark Complete
   const handleMarkComplete = async (id) => {
     try {
       const res = await axios.patch(`http://localhost:5000/habbits/complete/${id}`, {
@@ -96,7 +96,7 @@ const MyHabbits = () => {
     }
   };
 
-  // ✅ Format date
+  //  Format date
   const formatDate = (d) => {
     if (!d) return "";
     const date = new Date(d);

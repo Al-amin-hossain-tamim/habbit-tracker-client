@@ -122,7 +122,9 @@ const UpdateHabit = () => {
             <input
               type="time"
               name="newReminderTime"
-              defaultValue={reminderTime}
+              defaultValue={reminderTime
+                
+              }
               className="input input-bordered w-full"
             />
           </div>

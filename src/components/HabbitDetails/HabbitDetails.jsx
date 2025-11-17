@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import axios from "axios";
 import { useLoaderData } from "react-router";
+import { toast, ToastContainer } from "react-toastify";
 
 const HabitDetails = () => {
   const loadedHabit = useLoaderData();
@@ -49,29 +50,29 @@ const HabitDetails = () => {
   const progress = calculateProgress();
 
   // Handle Mark Complete
-  const handleMarkComplete = async () => {
-    if (completionHistory.includes(today)) {
-      return alert("Already marked complete for today!");
-    }
+ const handleMarkComplete = async () => {
+  const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
 
-    const updatedHistory = [...completionHistory, today];
+  // Prevent duplicate entry for same day
+  if (habit.completionHistory?.includes(today)) {
+    toast.error("Already marked complete for today!");
+    return;
+  }
 
-    // Update UI instantly
-    setHabit((prev) => ({
-      ...prev,
+  const updatedHistory = [...(habit.completionHistory || []), today];
+
+  try {
+    await axios.patch(`http://localhost:5000/habbits/${habit._id}`, {
       completionHistory: updatedHistory,
-    }));
+    });
 
-    // Update DB
-    try {
-      await axios.put(`http://localhost:5000/habbits/${_id}`, {
-        completionHistory: updatedHistory,
-      });
-    } catch (error) {
-      console.error("Failed to update habit", error);
-      alert("Failed to update. Try again.");
-    }
-  };
+    setHabit({ ...habit, completionHistory: updatedHistory }); // update UI instantly
+    toast.success("Marked as complete!");
+  } catch {
+    toast.error("Failed to update habit");
+  }
+};
+
 
   return (
     <section className="py-12 bg-slate-100 min-h-screen">
@@ -156,7 +157,7 @@ const HabitDetails = () => {
             </div>
           </div>
         </div>
-
+<ToastContainer></ToastContainer>
       </div>
     </section>
   );
