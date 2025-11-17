@@ -149,7 +149,7 @@ const HabitDetails = () => {
               </button>
 
               <button
-                onClick={handleMarkComplete}
+                onClick={()=>handleMarkComplete(_id)}
                 className="btn bg-indigo-600 text-white hover:bg-indigo-700"
               >
                 Mark Complete

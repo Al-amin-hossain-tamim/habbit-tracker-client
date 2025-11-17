@@ -1,17 +1,39 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../Contexts/AuthContext/AuthContext";
 import { Link, useNavigate } from "react-router";
+import { toast, ToastContainer } from "react-toastify";
 
 const MyHabbits = () => {
   const { loginUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [habits, setHabits] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [marking, setMarking] = useState({}); // { [habitId]: boolean }
 
-  //  Fetch user's own habits
+  // helper: today's date string YYYY-MM-DD (UTC)
+  const todayStr = () => new Date().toISOString().split("T")[0];
+
+  // compute streak locally if server doesn't return it
+  const computeStreakLocal = (history = []) => {
+    if (!Array.isArray(history) || history.length === 0) return 0;
+    const set = new Set(history);
+    let streak = 0;
+    const cur = new Date();
+    while (true) {
+      const ymd = cur.toISOString().split("T")[0];
+      if (set.has(ymd)) {
+        streak++;
+        cur.setUTCDate(cur.getUTCDate() - 1);
+      } else {
+        break;
+      }
+    }
+    return streak;
+  };
+
+  // Fetch user's own habits
   useEffect(() => {
     if (!loginUser?.email) return;
 
@@ -19,13 +41,19 @@ const MyHabbits = () => {
       setLoading(true);
       try {
         const email = loginUser.email.trim().toLowerCase();
-        console.log("Fetching my habbits for email:", email);
-
         const res = await axios.get("http://localhost:5000/my-habbits", {
           params: { email },
         });
 
-        setHabits(res.data);
+        // Normalize data to an array and ensure fields exist
+        const data = Array.isArray(res.data) ? res.data : res.data?.habits ?? [];
+        const normalized = data.map((h) => ({
+          ...h,
+          completionHistory: Array.isArray(h.completionHistory) ? h.completionHistory : [],
+          currentStreak: typeof h.currentStreak === "number" ? h.currentStreak : computeStreakLocal(h.completionHistory),
+        }));
+
+        setHabits(normalized);
       } catch (err) {
         console.error("Failed to load habits:", err);
         toast.error("Failed to load habits");
@@ -37,21 +65,19 @@ const MyHabbits = () => {
     fetchHabits();
   }, [loginUser?.email]);
 
-  //  Delete habit (with SweetAlert2)
+  // Delete habit
   const handleDelete = async (id) => {
     Swal.fire({
       title: "Are you sure?",
       text: "This habit will be permanently deleted!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#9333ea", // Tailwind purple-600
+      confirmButtonColor: "#9333ea",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
       cancelButtonText: "Cancel",
       background: "#fff",
-      backdrop: `
-        rgba(0,0,0,0.4)
-      `,
+      backdrop: `rgba(0,0,0,0.4)`,
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -78,25 +104,64 @@ const MyHabbits = () => {
     });
   };
 
-  //  Mark Complete
-  const handleMarkComplete = async (id) => {
-    try {
-      const res = await axios.patch(`http://localhost:5000/habbits/complete/${id}`, {
-        email: loginUser?.email,
-      });
-      toast.success("Marked as complete!");
-      setHabits((prev) =>
-        prev.map((h) =>
-          h._id === id ? { ...h, currentStreak: res.data.currentStreak } : h
-        )
-      );
-    } catch (err) {
-      console.error(err);
-      toast.error("Could not mark complete");
-    }
-  };
+  // Mark Complete: calls backend endpoint and updates this habit
+ const handleMarkComplete = async (id) => {
+  if (!loginUser?.email) {
+    toast.error("You must be logged in.");
+    navigate("/Login");
+    return;
+  }
 
-  //  Format date
+  const habit = habits.find((h) => h._id === id);
+  if (!habit) return toast.error("Habit not found.");
+
+  const today = new Date().toISOString().split("T")[0];
+
+  // prevent duplicate
+  if (habit.completionHistory?.includes(today)) {
+    toast("Already completed today.");
+    return;
+  }
+
+  setMarking((m) => ({ ...m, [id]: true }));
+
+  try {
+    // PATCH request to backend
+    const res = await axios.patch(`http://localhost:5000/habbits/${id}`, {
+      addDate: today, // tells backend to push today's date
+    });
+
+    if (!res.data.success) {
+      toast.error("Failed to update.");
+      return;
+    }
+
+    const updated = res.data.habit;
+
+    toast.success("Marked as complete!");
+
+    // Update UI instantly
+    setHabits((prev) =>
+      prev.map((h) =>
+        h._id === id
+          ? {
+              ...updated,
+              completionHistory: updated.completionHistory,
+              currentStreak: updated.currentStreak,
+            }
+          : h
+      )
+    );
+  } catch (err) {
+    console.error(err);
+    toast.error("Something went wrong.");
+  } finally {
+    setMarking((m) => ({ ...m, [id]: false }));
+  }
+};
+
+
+  // format date utility
   const formatDate = (d) => {
     if (!d) return "";
     const date = new Date(d);
@@ -107,13 +172,13 @@ const MyHabbits = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
-        <span className="loading loading-spinner loading-lg text-purple-600"></span>
+        <span className="loading loading-spinner loading-lg text-indigo-600"></span>
       </div>
     );
   }
 
   return (
-    <section className="py-12 bg-gradient-to-b from-purple-50 to-white min-h-screen">
+    <section className="py-12 bg-slate-50 min-h-screen">
       <div className="max-w-6xl mx-auto px-4">
         <h1 className="text-3xl font-bold text-slate-800 mb-8">My Habits</h1>
 
@@ -124,7 +189,7 @@ const MyHabbits = () => {
             No habits found. Add your first habit now!
             <button
               onClick={() => navigate("/AddHabbit")}
-              className="btn btn-sm ml-3 bg-purple-600 text-white border-none hover:bg-purple-700"
+              className="btn btn-sm ml-3 bg-indigo-600 text-white border-none hover:bg-indigo-700"
             >
               Add Habit
             </button>
@@ -132,7 +197,7 @@ const MyHabbits = () => {
         ) : (
           <div className="overflow-x-auto bg-white shadow-lg rounded-2xl">
             <table className="table w-full">
-              <thead className="bg-purple-100 text-purple-700 font-semibold">
+              <thead className="bg-indigo-100 text-indigo-700 font-semibold">
                 <tr>
                   <th>#</th>
                   <th>Title</th>
@@ -144,13 +209,13 @@ const MyHabbits = () => {
               </thead>
               <tbody>
                 {habits.map((h, i) => (
-                  <tr key={h._id} className="hover:bg-purple-50">
+                  <tr key={h._id} className="hover:bg-indigo-50">
                     <td>{i + 1}</td>
                     <td className="font-semibold text-slate-800">{h.title}</td>
                     <td>{h.category}</td>
                     <td>
                       <span className="badge badge-outline badge-success">
-                        {h.currentStreak || 0} days
+                        {h.currentStreak ?? 0} days
                       </span>
                     </td>
                     <td>{formatDate(h.created_At)}</td>
@@ -172,8 +237,9 @@ const MyHabbits = () => {
                       <button
                         onClick={() => handleMarkComplete(h._id)}
                         className="btn btn-xs bg-green-500 border-none text-white hover:bg-green-600"
+                        disabled={!!marking[h._id]}
                       >
-                        Mark Complete
+                        {marking[h._id] ? "Marking..." : "Mark Complete"}
                       </button>
                     </td>
                   </tr>
@@ -183,6 +249,8 @@ const MyHabbits = () => {
           </div>
         )}
       </div>
+
+      <ToastContainer position="top-right" />
     </section>
   );
 };
