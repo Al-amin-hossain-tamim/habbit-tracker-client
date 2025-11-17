@@ -50,22 +50,27 @@ const router = createBrowserRouter([
             <MyHabbit></MyHabbit>
           </PrivateRoute>
         ),
-        
       },
       {
         path: "PublicHabbits",
         Component: PublicHabbits,
       },
       {
-        path:'HabbitDetails/:id',
-        loader:({params})=>fetch(`http://localhost:5000/habbits/${params.id}`),
-        element:<HabbitDetails></HabbitDetails>
+        path: "HabbitDetails/:id",
+        loader: ({ params }) =>
+          fetch(
+            `https://habbit-tracker-api-server.vercel.app/habbits/${params.id}`
+          ),
+        element: <HabbitDetails></HabbitDetails>,
       },
       {
-        path:'UpdateHabit/:id',
-        Component:UpdateHabit,
-        loader: ({params})=>fetch(`http://localhost:5000/habbits/${params.id}`)
-      }
+        path: "UpdateHabit/:id",
+        Component: UpdateHabit,
+        loader: ({ params }) =>
+          fetch(
+            `https://habbit-tracker-api-server.vercel.app/habbits/${params.id}`
+          ),
+      },
     ],
   },
 ]);

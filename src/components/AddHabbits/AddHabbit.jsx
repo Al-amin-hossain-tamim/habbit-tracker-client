@@ -15,7 +15,7 @@ const AddHabbit = () => {
     const category = e.target.category.value;
     const frequency = e.target.frequency.value;
     const imageUrl = e.target.imageUrl.value;
-    const reminderTime = e.target.reminderTime.value;  
+    const reminderTime = e.target.reminderTime.value;
 
     const newHabit = {
       name,
@@ -25,10 +25,13 @@ const AddHabbit = () => {
       category,
       frequency,
       imageUrl,
-      reminderTime, 
+      reminderTime,
     };
 
-    await axios.post("http://localhost:5000/habbits", newHabit);
+    await axios.post(
+      "https://habbit-tracker-api-server.vercel.app/habbits",
+      newHabit
+    );
 
     e.target.reset();
     toast.success("Habit added successfully");
@@ -45,7 +48,9 @@ const AddHabbit = () => {
           {/* name & email */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Your name</label>
+              <label className="block text-sm font-medium mb-2">
+                Your name
+              </label>
               <input
                 name="name"
                 defaultValue={`${loginUser.displayName}`}
@@ -95,9 +100,10 @@ const AddHabbit = () => {
 
           {/* meta */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
             <div>
-              <label className="block text-sm font-medium mb-2"><span className="text-red-500">*</span> Category</label>
+              <label className="block text-sm font-medium mb-2">
+                <span className="text-red-500">*</span> Category
+              </label>
               <select
                 name="category"
                 className="select select-bordered w-full"
@@ -127,23 +133,25 @@ const AddHabbit = () => {
               </select>
             </div>
 
-            {/* ⭐ Reminder Time */}
-           <div>
-            <label className="block text-sm font-medium mb-2">
-              <span className="text-red-600">*</span> Reminder Time
-            </label>
-            <input
-              type="time"
-              name="reminderTime"
-              required
-              className="input input-bordered w-full"
-            />
-          </div>
+            {/*  Reminder Time */}
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                <span className="text-red-600">*</span> Reminder Time
+              </label>
+              <input
+                type="time"
+                name="reminderTime"
+                required
+                className="input input-bordered w-full"
+              />
+            </div>
           </div>
 
           {/* image */}
           <div>
-            <label className="block text-sm font-medium mb-2">Habit Image (optional)</label>
+            <label className="block text-sm font-medium mb-2">
+              Habit Image (optional)
+            </label>
             <input
               name="imageUrl"
               className="input input-bordered w-full"

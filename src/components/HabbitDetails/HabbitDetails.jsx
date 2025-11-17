@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useLoaderData } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
@@ -50,36 +50,37 @@ const HabitDetails = () => {
   const progress = calculateProgress();
 
   // Handle Mark Complete
- const handleMarkComplete = async () => {
-  const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+  const handleMarkComplete = async () => {
+    const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
 
-  // Prevent duplicate entry for same day
-  if (habit.completionHistory?.includes(today)) {
-    toast.error("Already marked complete for today!");
-    return;
-  }
+    // Prevent duplicate entry for same day
+    if (habit.completionHistory?.includes(today)) {
+      toast.error("Already marked complete for today!");
+      return;
+    }
 
-  const updatedHistory = [...(habit.completionHistory || []), today];
+    const updatedHistory = [...(habit.completionHistory || []), today];
 
-  try {
-    await axios.patch(`http://localhost:5000/habbits/${habit._id}`, {
-      completionHistory: updatedHistory,
-    });
+    try {
+      await axios.patch(
+        `https://habbit-tracker-api-server.vercel.app/habbits/${habit._id}`,
+        {
+          completionHistory: updatedHistory,
+        }
+      );
 
-    setHabit({ ...habit, completionHistory: updatedHistory }); // update UI instantly
-    toast.success("Marked as complete!");
-  } catch {
-    toast.error("Failed to update habit");
-  }
-};
-
+      setHabit({ ...habit, completionHistory: updatedHistory }); // update UI instantly
+      toast.success("Marked as complete!");
+    } catch {
+      toast.error("Failed to update habit");
+    }
+  };
 
   return (
     <section className="py-12 bg-slate-100 min-h-screen">
       <title>HabitSpark / Habit Details</title>
 
       <div className="max-w-4xl mx-auto px-4">
-
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden border">
           {/* Image */}
           <div className="h-64 bg-slate-200">
@@ -149,7 +150,7 @@ const HabitDetails = () => {
               </button>
 
               <button
-                onClick={()=>handleMarkComplete(_id)}
+                onClick={() => handleMarkComplete(_id)}
                 className="btn bg-indigo-600 text-white hover:bg-indigo-700"
               >
                 Mark Complete
@@ -157,7 +158,7 @@ const HabitDetails = () => {
             </div>
           </div>
         </div>
-<ToastContainer></ToastContainer>
+        <ToastContainer></ToastContainer>
       </div>
     </section>
   );

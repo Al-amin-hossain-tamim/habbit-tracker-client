@@ -8,8 +8,15 @@ const UpdateHabit = () => {
   const navigate = useNavigate();
   const { loginUser } = useContext(AuthContext);
   const data = useLoaderData();
-  const { _id, title, imageUrl, reminderTime, description, category, frequency } =
-    data;
+  const {
+    _id,
+    title,
+    imageUrl,
+    reminderTime,
+    description,
+    category,
+    frequency,
+  } = data;
 
   console.log(data, _id);
 
@@ -19,7 +26,7 @@ const UpdateHabit = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    const newTitle = e.target.title.value;
+    const newTitle = e.target.newTitle.value;
     const newDescription = e.target.newDescription.value;
     const newCategory = e.target.newCategory.value;
     const newReminderTime = e.target.newReminderTime.value;
@@ -37,7 +44,10 @@ const UpdateHabit = () => {
         email: loginUser?.email,
       };
 
-      await axios.patch(`http://localhost:5000/habbits/${_id}`, updateHabit);
+      await axios.patch(
+        `https://habbit-tracker-api-server.vercel.app/habbits/${_id}`,
+        updateHabit
+      );
       toast.success("Habit updated successfully!");
       navigate("/MyHabbit");
     } catch (err) {
@@ -116,18 +126,16 @@ const UpdateHabit = () => {
 
         {/* Reminder Time */}
         <div>
-            <label className="block text-sm font-medium mb-2">
+          <label className="block text-sm font-medium mb-2">
             Reminder Time
-            </label>
-            <input
-              type="time"
-              name="newReminderTime"
-              defaultValue={reminderTime
-                
-              }
-              className="input input-bordered w-full"
-            />
-          </div>
+          </label>
+          <input
+            type="time"
+            name="newReminderTime"
+            defaultValue={reminderTime}
+            className="input input-bordered w-full"
+          />
+        </div>
 
         {/* Image Upload */}
         <div>

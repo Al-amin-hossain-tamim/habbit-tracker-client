@@ -61,7 +61,7 @@ const Resister = () => {
           image: photo,
         };
 
-        fetch("http://localhost:5000/users", {
+        fetch("https://habbit-tracker-api-server.vercel.app/users", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify(newUser),
@@ -86,7 +86,7 @@ const Resister = () => {
           image: result.user.photoURL,
         };
 
-        fetch("http://localhost:5000/users", {
+        fetch("https://habbit-tracker-api-server.vercel.app/users", {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify(newUser),
@@ -173,10 +173,7 @@ const Resister = () => {
             className="btn mt-3 w-full border-indigo-600 text-indigo-700 hover:bg-indigo-100"
           >
             <span className="w-[15px]">
-              <svg
-                viewBox="0 0 533.5 544.3"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
                 <path
                   fill="#4285F4"
                   d="M533.5 278.4c0-18.7-1.6-37.2-4.8-55H272v104.4h146.9
@@ -211,10 +208,7 @@ const Resister = () => {
 
           <h5 className="mt-3 text-sm">
             Already have an account?{" "}
-            <Link
-              to="/Login"
-              className="text-indigo-600 underline font-medium"
-            >
+            <Link to="/Login" className="text-indigo-600 underline font-medium">
               Login
             </Link>
           </h5>

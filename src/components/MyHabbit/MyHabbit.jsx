@@ -41,16 +41,26 @@ const MyHabbits = () => {
       setLoading(true);
       try {
         const email = loginUser.email.trim().toLowerCase();
-        const res = await axios.get("http://localhost:5000/my-habbits", {
-          params: { email },
-        });
+        const res = await axios.get(
+          "https://habbit-tracker-api-server.vercel.app/my-habbits",
+          {
+            params: { email },
+          }
+        );
 
         // Normalize data to an array and ensure fields exist
-        const data = Array.isArray(res.data) ? res.data : res.data?.habits ?? [];
+        const data = Array.isArray(res.data)
+          ? res.data
+          : res.data?.habits ?? [];
         const normalized = data.map((h) => ({
           ...h,
-          completionHistory: Array.isArray(h.completionHistory) ? h.completionHistory : [],
-          currentStreak: typeof h.currentStreak === "number" ? h.currentStreak : computeStreakLocal(h.completionHistory),
+          completionHistory: Array.isArray(h.completionHistory)
+            ? h.completionHistory
+            : [],
+          currentStreak:
+            typeof h.currentStreak === "number"
+              ? h.currentStreak
+              : computeStreakLocal(h.completionHistory),
         }));
 
         setHabits(normalized);
@@ -81,7 +91,9 @@ const MyHabbits = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`http://localhost:5000/habbits/${id}`);
+          await axios.delete(
+            `https://habbit-tracker-api-server.vercel.app/habbits/${id}`
+          );
           toast.success("Habit deleted successfully");
           setHabits((prev) => prev.filter((h) => h._id !== id));
 
@@ -105,61 +117,63 @@ const MyHabbits = () => {
   };
 
   // Mark Complete: calls backend endpoint and updates this habit
- const handleMarkComplete = async (id) => {
-  if (!loginUser?.email) {
-    toast.error("You must be logged in.");
-    navigate("/Login");
-    return;
-  }
-
-  const habit = habits.find((h) => h._id === id);
-  if (!habit) return toast.error("Habit not found.");
-
-  const today = new Date().toISOString().split("T")[0];
-
-  // prevent duplicate
-  if (habit.completionHistory?.includes(today)) {
-    toast("Already completed today.");
-    return;
-  }
-
-  setMarking((m) => ({ ...m, [id]: true }));
-
-  try {
-    // PATCH request to backend
-    const res = await axios.patch(`http://localhost:5000/habbits/${id}`, {
-      addDate: today, // tells backend to push today's date
-    });
-
-    if (!res.data.success) {
-      toast.error("Failed to update.");
+  const handleMarkComplete = async (id) => {
+    if (!loginUser?.email) {
+      toast.error("You must be logged in.");
+      navigate("/Login");
       return;
     }
 
-    const updated = res.data.habit;
+    const habit = habits.find((h) => h._id === id);
+    if (!habit) return toast.error("Habit not found.");
 
-    toast.success("Marked as complete!");
+    const today = new Date().toISOString().split("T")[0];
 
-    // Update UI instantly
-    setHabits((prev) =>
-      prev.map((h) =>
-        h._id === id
-          ? {
-              ...updated,
-              completionHistory: updated.completionHistory,
-              currentStreak: updated.currentStreak,
-            }
-          : h
-      )
-    );
-  } catch (err) {
-    console.error(err);
-    toast.error("Something went wrong.");
-  } finally {
-    setMarking((m) => ({ ...m, [id]: false }));
-  }
-};
+    // prevent duplicate
+    if (habit.completionHistory?.includes(today)) {
+      toast("Already completed today.");
+      return;
+    }
 
+    setMarking((m) => ({ ...m, [id]: true }));
+
+    try {
+      // PATCH request to backend
+      const res = await axios.patch(
+        `https://habbit-tracker-api-server.vercel.app/habbits/${id}`,
+        {
+          addDate: today, // tells backend to push today's date
+        }
+      );
+
+      if (!res.data.success) {
+        toast.error("Failed to update.");
+        return;
+      }
+
+      const updated = res.data.habit;
+
+      toast.success("Marked as complete!");
+
+      // Update UI instantly
+      setHabits((prev) =>
+        prev.map((h) =>
+          h._id === id
+            ? {
+                ...updated,
+                completionHistory: updated.completionHistory,
+                currentStreak: updated.currentStreak,
+              }
+            : h
+        )
+      );
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong.");
+    } finally {
+      setMarking((m) => ({ ...m, [id]: false }));
+    }
+  };
 
   // format date utility
   const formatDate = (d) => {

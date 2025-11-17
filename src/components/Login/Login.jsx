@@ -47,7 +47,7 @@ const Login = () => {
           image: result.user.photoURL,
         };
 
-        fetch("http://localhost:5000/users", {
+        fetch("https://habbit-tracker-api-server.vercel.app/users", {
           method: "POST",
           headers: {
             "content-type": "application/json",
@@ -83,7 +83,6 @@ const Login = () => {
             <h1 className="text-5xl font-bold mb-4">Login</h1>
             <form onSubmit={handleLogin}>
               <fieldset className="fieldset">
-
                 {/* Email */}
                 <label className="label">EMAIL</label>
                 <input

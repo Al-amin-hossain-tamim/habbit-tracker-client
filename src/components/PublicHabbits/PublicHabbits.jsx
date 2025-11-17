@@ -24,7 +24,9 @@ const PublicHabbits = () => {
     const fetchHabits = async () => {
       setLoading(true);
       try {
-        const res = await axios.get("http://localhost:5000/habbits");
+        const res = await axios.get(
+          "https://habbit-tracker-api-server.vercel.app/habbits"
+        );
         setHabits(Array.isArray(res.data) ? res.data : []);
         setFilteredHabits(Array.isArray(res.data) ? res.data : []);
       } catch (error) {
@@ -45,7 +47,10 @@ const PublicHabbits = () => {
     if (categoryFilter !== "All") {
       const catLower = categoryFilter.toLowerCase();
       filtered = filtered.filter(
-        (h) => String(h.category || "").trim().toLowerCase() === catLower
+        (h) =>
+          String(h.category || "")
+            .trim()
+            .toLowerCase() === catLower
       );
     }
 
@@ -53,8 +58,12 @@ const PublicHabbits = () => {
       const s = searchTerm.trim().toLowerCase();
       filtered = filtered.filter(
         (h) =>
-          String(h.title || "").toLowerCase().includes(s) ||
-          String(h.description || "").toLowerCase().includes(s)
+          String(h.title || "")
+            .toLowerCase()
+            .includes(s) ||
+          String(h.description || "")
+            .toLowerCase()
+            .includes(s)
       );
     }
 
@@ -84,7 +93,9 @@ const PublicHabbits = () => {
           className="select select-bordered w-full md:w-1/4 focus:outline-none focus:border-indigo-500"
         >
           {CATEGORIES.map((cat) => (
-            <option key={cat} value={cat}>{cat}</option>
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
           ))}
         </select>
       </div>
